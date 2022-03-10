@@ -4,8 +4,12 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm_notebook as tqdm
 import subprocess
 
+st_url = input("stream URL: ")
+video_name = input("A name for output video: ")
+output = video_name + '.mp4'
+
 sess = requests.Session()
-r = sess.get("https://www.iplt20.com/video/144829/final-csk-vs-srh-fbb-stylish-player-of-the-match-lungi-ngidi")
+r = sess.get(st_url)
 soup = BeautifulSoup(r.content, 'html5lib')
 video_id = soup.find('video', attrs={'id': 'playlistPlayer'})['data-video-id']
 account_id = soup.find('video', attrs={'id': 'playlistPlayer'})['data-account']
@@ -33,4 +37,4 @@ with open("video.ts", 'wb') as f:
         r = sess.get(segment_uri)
         f.write(r.content)
 
-subprocess.run(['ffmpeg', '-i', 'video.ts', 'video.mp4'])
+subprocess.run(['ffmpeg', '-i', 'video.ts', output])
